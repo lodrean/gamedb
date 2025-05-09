@@ -3,7 +3,7 @@ import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.compose.reload.ComposeHotRun
 import org.jetbrains.kotlin.compose.compiler.gradle.ComposeFeatureFlag
 import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSetTree
-import io.gitlab.arturbosch.detekt.extensions.DetektExtension
+import io.gitlab.arturbosch.detekt.Detekt
 
 plugins {
     alias(libs.plugins.multiplatform)
@@ -15,7 +15,8 @@ plugins {
     alias(libs.plugins.ksp)
     alias(libs.plugins.room)
     alias(libs.plugins.buildConfig)
-    alias(libs.plugins.detekt)
+    // Detekt plugin is applied by DetektConventionPlugin
+    // alias(libs.plugins.detekt)
 }
 
 kotlin {
@@ -161,12 +162,7 @@ buildConfig {
     // https://github.com/gmazzo/gradle-buildconfig-plugin#usage-in-kts
 }
 
-configure<DetektExtension> {
-    config = files("$rootDir/config/detekt/detekt.yml")
-    baseline = file("$rootDir/config/detekt/baseline.xml")
-    buildUponDefaultConfig = true
-    allRules = false
-}
+// Detekt configuration is handled by DetektConventionPlugin
 
 room {
     schemaDirectory("$projectDir/schemas")
@@ -189,7 +185,7 @@ dependencies {
         add("kspIosSimulatorArm64", this)
     }
 
-    // Detekt plugins
-    add("detektPlugins", libs.detekt.formatting)
-    add("detektPlugins", libs.detekt.compose)
+    // Detekt plugins are configured in DetektConventionPlugin
+    // add("detektPlugins", "io.gitlab.arturbosch.detekt:detekt-formatting:1.23.4")
+    // add("detektPlugins", "com.twitter.compose.rules:detekt:0.0.26")
 }

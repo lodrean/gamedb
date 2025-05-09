@@ -26,7 +26,12 @@ object AppFactory {
                 // Configure JSON serialization
             }
             install(Logging) {
-                level = LogLevel.INFO
+                level = LogLevel.ALL
+                logger = object : io.ktor.client.plugins.logging.Logger {
+                    override fun log(message: String) {
+                        println("HTTP Client: $message")
+                    }
+                }
             }
         }
     }
