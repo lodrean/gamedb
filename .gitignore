@@ -1,17 +1,63 @@
 
-*.iml
-.gradle
-.idea
-.kotlin
-.DS_Store
-build
-*/build
-captures
-.externalNativeBuild
-.cxx
+# Gradle files
+.gradle/
+build/
+!gradle/wrapper/gradle-wrapper.jar
+
+# Local configuration file
 local.properties
+
+# IntelliJ IDEA
+.idea/workspace.xml
+.idea/tasks.xml
+.idea/gradle.xml
+.idea/assetWizardSettings.xml
+.idea/dictionaries
+.idea/libraries
+.idea/caches
+.idea/modules.xml
+.idea/*.iml
+.idea/modules
+*.iml
+*.ipr
+*.iws
+
+# OS-specific files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Generated files
+**/build/
+captures/
+.externalNativeBuild/
+.cxx/
+
+# Kotlin/JS
+node_modules/
+**/js/**
+
+# Kotlin/Native
+*.klib
+*.kexe
+
+# iOS
+iosApp/Pods/
+iosApp/Podfile.lock
 xcuserdata/
-Pods/
+*.pbxuser
+*.mode1v3
+*.mode2v3
+*.perspectivev3
+*.xcuserstate
+project.xcworkspace/
+
+# Additional project-specific exclusions
+.kotlin/
 *.jks
 *.gpg
 *yarn.lock
