@@ -1,37 +1,24 @@
-rootProject.name = "gamedb"
-
 pluginManagement {
     repositories {
-        google {
-            content { 
-              	includeGroupByRegex("com\\.android.*")
-              	includeGroupByRegex("com\\.google.*")
-              	includeGroupByRegex("androidx.*")
-              	includeGroupByRegex("android.*")
-            }
-        }
         gradlePluginPortal()
+        google()
         mavenCentral()
+        maven("https://maven.pkg.jetbrains.space/public/p/compose/dev") // Add this repository
+    }
+    plugins {
+        // Declare the Compose plugin here
+        id("org.jetbrains.kotlin.plugin.compose") version "2.1.20" // Replace YOUR_COMPOSE_PLUGIN_VERSION
+        // Other plugins...
     }
 }
 
 dependencyResolutionManagement {
     repositories {
-        google {
-            content { 
-              	includeGroupByRegex("com\\.android.*")
-              	includeGroupByRegex("com\\.google.*")
-              	includeGroupByRegex("androidx.*")
-              	includeGroupByRegex("android.*")
-            }
-        }
         mavenCentral()
+        google()
+        maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
     }
 }
-plugins {
-    //https://github.com/JetBrains/compose-hot-reload?tab=readme-ov-file#set-up-automatic-provisioning-of-the-jetbrains-runtime-jbr-via-gradle
-    id("org.gradle.toolchains.foojay-resolver-convention").version("0.10.0")
-}
 
+rootProject.name = "gamedb"
 include(":composeApp")
-

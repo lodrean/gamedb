@@ -46,11 +46,33 @@ class NavController {
 
 /**
  * Remember a NavController instance.
- * This function uses rememberSaveable to preserve the navigation state across configuration changes.
+ * This function uses rememberSaveable with a custom Saver to preserve the navigation state across configuration changes.
  *
  * @return A remembered NavController instance.
  */
 @Composable
 fun rememberNavController(): NavController {
-    return rememberSaveable { NavController() }
+    return rememberSaveable(
+        saver = androidx.compose.runtime.saveable.Saver(
+            save = { navController ->
+                when (val destination = navController.currentDestination) {
+                    is NavDestination.Home -> "home"
+                    is NavDestination.GameDetail -> "game_detail:${destination.gameId}"
+                }
+            },
+            restore = { value ->
+                val navController = NavController()
+                when {
+                    value == "home" -> navController.navigate(NavDestination.Home)
+                    value.startsWith("game_detail:") -> {
+                        val gameId = value.removePrefix("game_detail:").toLongOrNull() ?: 0L
+                        navController.navigate(NavDestination.GameDetail(gameId))
+                    }
+                }
+                navController
+            }
+        )
+    ) {
+        NavController()
+    }
 }

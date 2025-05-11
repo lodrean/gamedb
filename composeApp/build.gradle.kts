@@ -1,22 +1,20 @@
 import org.jetbrains.compose.ExperimentalComposeLibrary
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.compose.reload.ComposeHotRun
-import org.jetbrains.kotlin.compose.compiler.gradle.ComposeFeatureFlag
 import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSetTree
-import io.gitlab.arturbosch.detekt.Detekt
 
 plugins {
     alias(libs.plugins.multiplatform)
-    alias(libs.plugins.compose.compiler)
-    alias(libs.plugins.compose)
+    id("org.jetbrains.kotlin.plugin.compose") version "2.1.20" // Required for Compose with Kotlin 2.0.0
     alias(libs.plugins.android.application)
+    // Add the Compose Desktop plugin here
+    alias(libs.plugins.compose) // Assuming you have defined this alias in libs.versions.toml
     alias(libs.plugins.hotReload)
     alias(libs.plugins.kotlinx.serialization)
     alias(libs.plugins.ksp)
     alias(libs.plugins.room)
+    alias(libs.plugins.detekt)
     alias(libs.plugins.buildConfig)
-    // Detekt plugin is applied by DetektConventionPlugin
-    // alias(libs.plugins.detekt)
 }
 
 kotlin {
@@ -52,12 +50,11 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-            implementation(compose.runtime)
-            implementation(compose.foundation)
-            implementation(compose.material3)
-            implementation(compose.components.resources)
-            implementation(compose.components.uiToolingPreview)
+            implementation(libs.ktor.client.content.negotiation)
+            implementation(libs.kotlinx.serialization.json)
             implementation(libs.kotlinLogging)
+            implementation(libs.kotlinx.coroutines.core)
+            implementation(libs.kotlinx.datetime)
             implementation(libs.kotlinx.coroutines.core)
             implementation(libs.ktor.client.core)
             implementation(libs.ktor.client.content.negotiation)
@@ -65,32 +62,49 @@ kotlin {
             implementation(libs.ktor.client.logging)
             implementation(libs.androidx.lifecycle.viewmodel)
             implementation(libs.androidx.lifecycle.runtime.compose)
-            implementation(libs.androidx.navigation.composee)
+            implementation(libs.androidx.navigation.compose)
             implementation(libs.kotlinx.serialization.json)
             implementation(libs.kotlinInject)
             implementation(libs.coil)
             implementation(libs.coil.network.ktor)
             implementation(libs.multiplatformSettings)
             implementation(libs.kotlinx.datetime)
+
+            // Compose dependencies
+            implementation(compose.runtime)
+            implementation(compose.foundation)
+            implementation(compose.material3)
+            implementation(compose.ui)
+            implementation(compose.components.resources)
+            implementation(compose.components.uiToolingPreview)
+
+            // Add androidx.compose.ui dependencies for Preview annotation
+            implementation("androidx.compose.ui:ui-tooling-preview:1.6.0")
+            implementation("androidx.compose.ui:ui-tooling:1.6.0")
         }
 
         commonTest.dependencies {
             implementation(kotlin("test"))
             @OptIn(ExperimentalComposeLibrary::class)
-            implementation(compose.uiTest)
             implementation(libs.kotlinx.coroutines.test)
+
+            // Add Compose UI testing dependencies
         }
 
         androidMain.dependencies {
-            implementation(compose.uiTooling)
             implementation(libs.androidx.activityCompose)
+
+            implementation(libs.androidx.navigation.compose)
             implementation(libs.kotlinx.coroutines.android)
             implementation(libs.ktor.client.okhttp)
             implementation(libs.room.runtime)
+
+            // Add androidx.compose.ui dependencies for Preview annotation
+            implementation("androidx.compose.ui:ui-tooling-preview:1.6.0")
+            implementation("androidx.compose.ui:ui-tooling:1.6.0")
         }
 
         jvmMain.dependencies {
-            implementation(compose.desktop.currentOs)
             implementation(libs.kotlinx.coroutines.swing)
             implementation(libs.ktor.client.okhttp)
             implementation(libs.room.runtime)
@@ -150,9 +164,6 @@ compose.desktop {
 }
 
 //https://github.com/JetBrains/compose-hot-reload
-composeCompiler {
-    featureFlags.add(ComposeFeatureFlag.OptimizeNonSkippingGroups)
-}
 tasks.withType<ComposeHotRun>().configureEach {
     mainClass.set("MainKt")
 }
@@ -169,6 +180,9 @@ room {
 }
 
 dependencies {
+    implementation(libs.ktor.client.content.negotiation)
+    implementation(libs.kotlinx.serialization.json)
+    implementation(libs.ktor.client.serialization)
     with(libs.kotlinInjectKsp) {
         add("kspAndroid", this)
         add("kspJvm", this)
